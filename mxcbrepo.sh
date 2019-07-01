@@ -1,9 +1,9 @@
 #!/bin/bash
 #################################################################################
-# Title:         Cloudbox: Community Repo Cloner                                #
+# Title:         Cloudbox: Max Clockbox Repo Cloner                                #
 # Author(s):     Desimaniac (Original creator) & Migz93 (Community edition)     #
-# URL:           https://github.com/Cloudbox/Community                          #
-# Description:   Clones Community repo.                                         #
+# URL:           https://github.com/maximuskowalski/clockbox                          #
+# Description:   Clones Clockbox repo.                                         #
 # --                                                                            #
 #             Part of the Cloudbox project: https://cloudbox.works              #
 #################################################################################
@@ -11,27 +11,27 @@
 #################################################################################
 # Usage:                                                                        #
 # ======                                                                        #
-# curl -s https://cloudbox.works/scripts/cmrepo.sh | bash                       #
-# wget -qO- https://cloudbox.works/scripts/cmrepo.sh | bash                     #
+# curl -s https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash                       #
+# wget -qO- https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash                     #
 #################################################################################
 
 
 ## Variables
-COMMUNITY_PATH="$HOME/community"
-COMMUNITY_REPO="https://github.com/Cloudbox/Community.git"
+CLOCKBOX_PATH="$HOME/clockbox"
+CLOCKBOX_REPO="https://github.com/maximuskowalski/clockbox/clockbox.git"
 
 ## Clone Community and pull latest commit
-if [ -d "$COMMUNITY_PATH" ]; then
-    if [ -d "$COMMUNITY_PATH/.git" ]; then
-        cd "$COMMUNITY_PATH"
+if [ -d "$CLOCKBOX_PATH" ]; then
+    if [ -d "$CLOCKBOX_PATH/.git" ]; then
+        cd "$CLOCKBOX_PATH"
         git clean -df
         git pull
         git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
         git submodule update --init --recursive
     else
-        cd "$COMMUNITY_PATH"
+        cd "$CLOCKBOX_PATH"
         git init
-        git remote add origin "$COMMUNITY_REPO"
+        git remote add origin "$CLOCKBOX_REPO"
         git fetch
         git branch master origin/master
         git checkout -f master
@@ -41,16 +41,16 @@ if [ -d "$COMMUNITY_PATH" ]; then
         git submodule update --init --recursive
     fi
 else
-    git clone "$COMMUNITY_REPO" "$COMMUNITY_PATH"
-    cd "$COMMUNITY_PATH"
+    git clone "$CLOCKBOX_REPO" "$CLOCKBOX_PATH"
+    cd "$CLOCKBOX_PATH"
     git submodule update --init --recursive
 fi
 
-## Copy settings and config files into Community folder
+## Copy settings and config files into clockbox folder
 shopt -s nullglob
-for i in "$COMMUNITY_PATH"/defaults/*.default; do
-    if [ ! -f "$COMMUNITY_PATH/$(basename "${i%.*}")" ]; then
-        cp -n "${i}" "$COMMUNITY_PATH/$(basename "${i%.*}")"
+for i in "$CLOCKBOX_PATH"/defaults/*.default; do
+    if [ ! -f "$CLOCKBOX_PATH/$(basename "${i%.*}")" ]; then
+        cp -n "${i}" "$CLOCKBOX_PATH/$(basename "${i%.*}")"
     fi
 done
 shopt -u nullglob
