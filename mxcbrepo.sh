@@ -10,7 +10,13 @@
 #                     GNU General Public License v3.0                           #
 #################################################################################
 # Usage:                                                                        #
-# ======                                                                        #
+# ======
+# git clone https://github.com/maximuskowalski/clockbox.git ~/clockbox
+# cd ~/clockbox
+# nano ~/clockbox/ansible.cfg
+# sudo ansible-playbook clockbox.yml --tags kanboard
+#
+# curl -s https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash >/dev/null 2>&1; cd ~/clockbox                                                                        #
 # curl -s https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash                       #
 # wget -qO- https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash                     #
 #################################################################################
@@ -18,7 +24,7 @@
 
 ## Variables
 CLOCKBOX_PATH="$HOME/clockbox"
-CLOCKBOX_REPO="https://github.com/maximuskowalski/clockbox/clockbox.git"
+CLOCKBOX_REPO="https://github.com/maximuskowalski/clockbox.git"
 
 ## Clone Community and pull latest commit
 if [ -d "$CLOCKBOX_PATH" ]; then
