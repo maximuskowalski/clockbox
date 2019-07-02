@@ -7,7 +7,7 @@
 - name: MariaDB Role
   include_role:
     name: mariadb
-
+    
 - name: "sleep for 120 seconds and continue"
   wait_for: timeout=120
 
@@ -15,17 +15,17 @@
   include_role:
     name: cloudflare
   vars:
-    subdomain: kanboard
+    subdomain: "{{ bookstack.subdomain|default('bookstack',true) }}"
   when: cloudflare_enabled
 
 - name: Stop and remove any existing containers
   docker_container: "name={{ item }} state=absent"
   with_items:
-    - kanboard
+    - bookstack
 
-- name: Create kanboard database
+- name: Create bookstack database
   mysql_db:
-    name: kanboardapp
+    name: bookstackapp
     login_user: root
     login_password: password321
     state: present
@@ -33,37 +33,36 @@
 - name: Create required directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - /opt/kanboard
-    - /opt/kanboard/data
-    - /opt/kanboard/plugins
+    - /opt/bookstack
 
-- name: Create and start kanboard container
+- name: Create and start bookstack container
   docker_container:
-    name: kanboard
-    image: "kanboard/kanboard:latest"
-
+    name: bookstack
+    image: "linuxserver/bookstack"
+    pull: yes
+    published_ports:
+      - "127.0.0.1:6875:443"
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       DB_HOST: "mariadb:3306"
       DB_USER: root
       DB_PASS: password321
-      DB_DATABASE: kanboardapp
-      VIRTUAL_HOST: "kanboard.{{ user.domain }}"
+      DB_DATABASE: bookstackapp
+      VIRTUAL_HOST: "{{ bookstack.subdomain|default('bookstack',true) }}.{{ user.domain }}"
       VIRTUAL_PORT: 443
       VIRTUAL_PROTO: https
-      LETSENCRYPT_HOST: "kanboard.{{ user.domain }}"
+      LETSENCRYPT_HOST: "{{ bookstack.subdomain|default('bookstack',true) }}.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/kanboard/data:/var/www/app/data"
-      - "/opt/kanboard/plugins:/var/www/app/plugins"
+      - "/opt/bookstack:/config"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
-          - kanboard
+          - bookstack
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
