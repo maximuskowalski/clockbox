@@ -1,0 +1,58 @@
+#########################################################################
+# Title:         Cloudbox: audioserve Role                                    #
+# Author(s):     l3uddz, desimaniac                                     #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# Docker Image:  izderadicka/audioserve                                          #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: audioserve
+  when: cloudflare_enabled
+
+- name: "Create audioserve directories"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - "/opt/audioserve"
+    - "/opt/audioserve/.audioserve"
+
+- name: "Stop and remove any existing container"
+  docker_container:
+    name: audioserve
+    state: absent
+
+- name: "Pull audioserve Docker image"
+  docker_image:
+    name: "izderadicka/audioserve"
+
+- name: "Create and start container"
+  docker_container:
+    name: audioserve
+    image: "izderadicka/audioserve"
+    pull: yes
+    env:
+      VIRTUAL_HOST: "audioserve.{{ user.domain }}"
+      VIRTUAL_PORT: 3000
+      LETSENCRYPT_HOST: "audioserve.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      #AUDIOSERVE_SHARED_SECRET: mypass
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/audioserve:/home/audioserve"
+      - "/mnt/unionfs/Media:/data"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - audioserve
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
