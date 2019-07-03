@@ -1,13 +1,14 @@
-#########################################################################
-# Title:         Cloudbox: audioserve Role                                    #
-# Author(s):     l3uddz, desimaniac                                     #
-# URL:           https://github.com/cloudbox/cloudbox                   #
-# Docker Image:  izderadicka/audioserve                                          #
-# --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.works          #
-#########################################################################
-#                   GNU General Public License v3.0                     #
-#########################################################################
+##########################################################################
+# Title:         Cloudbox: audioserve Role                               #
+# Author(s):     l3uddz, desimaniac                                      #
+# URL:           https://github.com/cloudbox/cloudbox                    #
+# Docker Image:  izderadicka/audioserve                                  #
+# Android App https://github.com/izderadicka/audioserve-android/releases #
+# --                                                                     #
+#         Part of the Cloudbox project: https://cloudbox.works           #
+##########################################################################
+#                   GNU General Public License v3.0                      #
+##########################################################################
 ---
 - name: "Set DNS Record on CloudFlare"
   include_role:
@@ -49,7 +50,7 @@
       - "/mnt:/mnt"
       - "/mnt/unionfs/audiobooks/Calibre_Audio_Library:/audiobooks"
       #- "/mnt/unionfs/audiobooks/Calibre_Audio_Library:/collection1"
-      #- "/mnt/unionfs/audiobooks/Audiobooks_English:/collection2"
+      - "/mnt/unionfs/audiobooks/Audiobooks_English:/collection2"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:

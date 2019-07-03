@@ -28,3 +28,9 @@ Then SFTP onto your server and download the FILENAME.ovpn.
 Now load it into the OpenVPN client (or Viscosity, or whatever) and connect.
 
 If you play a Plex movie, it shows as LAN play. I also found that accessing apps is much faster too.
+
+############
+
+https://hub.docker.com/r/kylemanna/openvpn/
+
+https://github.com/kylemanna/docker-openvpn/blob/master/docs/docker-compose.md
