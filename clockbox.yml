@@ -10,3 +10,4 @@
     - { role: kanboard, tags: ['kanboard'] }
     - { role: audioserve, tags: ['audioserve'] }
     - { role: wekan, tags: ['wekan'] }
+    - { role: unifi, tags: ['unifi'] }
