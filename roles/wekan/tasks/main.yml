@@ -1,68 +1,78 @@
 ---
-- name: Install required packages
-  apt: "name={{ item }} state=latest"
-  with_items:
-    - python-pymysql
-
-- name: MariaDB Role
-  include_role:
-    name: mariadb
-    
-- name: "sleep for 120 seconds and continue"
-  wait_for: timeout=120
-
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
   vars:
-    subdomain: "{{ bookstack.subdomain|default('bookstack',true) }}"
+    subdomain: wekan
   when: cloudflare_enabled
 
 - name: Stop and remove any existing containers
-  docker_container: "name={{ item }} state=absent"
+  docker_container:
   with_items:
-    - bookstack
-
-- name: Create bookstack database
-  mysql_db:
-    name: bookstackapp
-    login_user: root
-    login_password: password321
-    state: present
+    - wekandb
+    - wekan
+  state: absent
 
 - name: Create required directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
-    - /opt/bookstack
+    - /opt/wekan
+    - /opt/wekan/wekandb
+    - /opt/wekan/wekandbdump
 
-- name: Create and start bookstack container
+- name: mongo wekanDB Role
   docker_container:
-    name: bookstack
-    image: "linuxserver/bookstack"
-    pull: yes
-    published_ports:
-      - "127.0.0.1:6875:443"
-    env:
-      PUID: "{{ uid }}"
-      PGID: "{{ gid }}"
-      DB_HOST: "mariadb:3306"
-      DB_USER: root
-      DB_PASS: password321
-      DB_DATABASE: bookstackapp
-      VIRTUAL_HOST: "{{ bookstack.subdomain|default('bookstack',true) }}.{{ user.domain }}"
-      VIRTUAL_PORT: 443
-      VIRTUAL_PROTO: https
-      LETSENCRYPT_HOST: "{{ bookstack.subdomain|default('bookstack',true) }}.{{ user.domain }}"
-      LETSENCRYPT_EMAIL: "{{ user.email }}"
+    name: wekandb
+    image: mongo:3.2.21
+    restart: always
+    command: mongod --smallfiles --oplogSize 128
+    networks:
+      - name: cloudbox
+        aliases:
+          - mongodb
+    expose:
+      - 27017
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/bookstack:/config"
+      - "/opt/wekan/wekandb:/data/db"
+      - "/opt/wekan/wekandbdump:/dump"
+
+- name: "sleep for 120 seconds and continue"
+  wait_for: timeout=120
+
+- name: Create and start wekan container
+  docker_container:
+    name: wekan
+    image: "quay.io/wekan/wekan:master"
+    pull: yes
+
+    env:
+      MONGO_URL: mongodb://wekandb:27017/wekan
+      ROOT_URL: https://wekan.{{ user.domain }}
+      #MAIL_URL: 'smtp://<mail_url>:25/?ignoreTLS=true&tls={rejectUnauthorized:false}'
+      #MAIL_FROM: 'Wekan Notifications <noreply.wekan@mydomain.com>'
+      WITH_API: true
+      BROWSER_POLICY_ENABLED: true
+      VIRTUAL_HOST: "wekan.{{ user.domain }}"
+      VIRTUAL_PORT: 443
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: "wekan.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      HTTPS_METHOD: noredirect
+
+    depends_on:
+      - wekandb
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/wekan/wekandb:/data/db"
+      - "/opt/wekan/wekandbdump:/dump"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
       - name: cloudbox
         aliases:
-          - bookstack
+          - wekan
     purge_networks: yes
     restart_policy: unless-stopped
     state: started

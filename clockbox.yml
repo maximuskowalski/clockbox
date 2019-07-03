@@ -9,3 +9,4 @@
     - { role: pre_tasks, tags: ['pre_tasks']}
     - { role: kanboard, tags: ['kanboard'] }
     - { role: audioserve, tags: ['audioserve'] }
+    - { role: wekan, tags: ['wekan'] }

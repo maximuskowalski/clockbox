@@ -1,0 +1,30 @@
+Setting up OpenVPN on Cloudbox
+
+Variables to change below:
+
+YOURSERVERIPADDRESS = IP address of your server
+YOURUSERNAME = which user you want to use - I created a new one.
+FILENAME = Name of the OpenVPN file you want to store the login config to.
+
+Installation:
+
+cd ~
+git clone https://github.com/kylemanna/docker-openvpn.git
+cd docker-openvpn/
+docker build -t myownvpn .
+mkdir /opt/vpn-data
+docker run -v /opt/vpn-data:/etc/openvpn --rm myownvpn ovpn_genconfig -u udp://YOURSERVERIPADDRESS:3000
+docker run -v /opt/vpn-data:/etc/openvpn --rm -it myownvpn ovpn_initpki
+docker run -v /opt/vpn-data:/etc/openvpn -d -p 3000:1194/udp --cap-add=NET_ADMIN myownvpn
+docker run -v /opt/vpn-data:/etc/openvpn --rm -it myownvpn easyrsa build-client-full YOURUSERNAME nopass
+docker run -v /opt/vpn-data:/etc/openvpn --rm myownvpn ovpn_getclient YOURUSERNAME > ~/FILENAME.ovpn
+
+Once done, I found it works straight away - but Portainer shows the Connected Network is bridge. Edit the container and change it to cloudbox.
+I also renamed it to openVPN too.
+Restart the container.
+
+Then SFTP onto your server and download the FILENAME.ovpn.
+
+Now load it into the OpenVPN client (or Viscosity, or whatever) and connect.
+
+If you play a Plex movie, it shows as LAN play. I also found that accessing apps is much faster too.
