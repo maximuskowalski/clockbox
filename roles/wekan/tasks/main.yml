@@ -1,3 +1,13 @@
+#########################################################################
+# Title:            Cloudbox: MariaDB Role                              #
+# Author(s):        l3uddz, desimaniac                                  #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  quay.io/wekan/wekan:master                                 #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
 ---
 - name: "Set DNS Record on CloudFlare"
   include_role:
@@ -5,13 +15,6 @@
   vars:
     subdomain: wekan
   when: cloudflare_enabled
-
-- name: Stop and remove any existing containers
-  docker_container:
-  with_items:
-    - wekandb
-    - wekan
-  state: absent
 
 - name: Create required directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
@@ -21,21 +24,18 @@
     - /opt/wekan/wekandbdump
 
 - name: mongo wekanDB Role
+  import_tasks: subtasks/wekandb.yml
+  when:
+    - (not continuous_integration)
+
+- name: "sleep for 120 seconds and continue"
+  wait_for: timeout=120
+
+- name: Stop and remove any existing containers
   docker_container:
-    name: wekandb
-    image: mongo:3.2.21
-    restart: always
-    command: mongod --smallfiles --oplogSize 128
-    networks:
-      - name: cloudbox
-        aliases:
-          - mongodb
-    expose:
-      - 27017
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/wekan/wekandb:/data/db"
-      - "/opt/wekan/wekandbdump:/dump"
+  with_items:
+    - wekan
+  state: absent
 
 - name: "sleep for 120 seconds and continue"
   wait_for: timeout=120
@@ -45,7 +45,6 @@
     name: wekan
     image: "quay.io/wekan/wekan:master"
     pull: yes
-
     env:
       MONGO_URL: mongodb://wekandb:27017/wekan
       ROOT_URL: https://wekan.{{ user.domain }}
