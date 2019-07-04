@@ -17,9 +17,9 @@
 - name: mongo wekanDB Role
   docker_container:
     name: wekandb
-    image: "mongo"
+    image: "mongo:3.2.21"
     pull: yes
-    command: --smallfiles
+    command: mongod --smallfiles --oplogSize 128
     networks:
       - name: cloudbox
         aliases:
@@ -31,7 +31,6 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/wekan/wekandb:/data/db"
       - "/opt/wekan/wekandbdump:/dump"
-      - "/opt/wekan/backups:/backups"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
 
