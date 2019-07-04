@@ -28,16 +28,13 @@
   when:
     - (not continuous_integration)
 
-- name: "sleep for 120 seconds and continue"
-  wait_for: timeout=120
+- name: "sleep for 30 seconds and continue"
+  wait_for: timeout=30
 
 - name: Stop and remove any existing containers
   docker_container:
     name: wekan
     state: absent
-
-- name: "sleep for 120 seconds and continue"
-  wait_for: timeout=120
 
 - name: Create and start wekan container
   docker_container:
