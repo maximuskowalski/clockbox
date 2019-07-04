@@ -18,7 +18,7 @@
 - name: mongo wekanDB Role
   docker_container:
     name: wekandb
-    image: mongo:3.2.21
+    image: "mongo:3.2.21"
     restart: always
     command: mongod --smallfiles --oplogSize 128
     networks:
