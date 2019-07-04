@@ -9,7 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
----
 - name: Stop and remove any existing containers
   docker_container:
   with_items:
