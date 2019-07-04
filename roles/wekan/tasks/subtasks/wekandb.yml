@@ -11,8 +11,7 @@
 ---
 - name: Stop and remove any existing containers
   docker_container:
-  with_items:
-    - wekandb
+  name: wekandb
   state: absent
 
 - name: mongo wekanDB Role

@@ -33,8 +33,7 @@
 
 - name: Stop and remove any existing containers
   docker_container:
-  with_items:
-    - wekan
+  name: wekan
   state: absent
 
 - name: "sleep for 120 seconds and continue"
