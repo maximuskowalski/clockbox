@@ -44,9 +44,10 @@
     image: "mquandalle/wekan"
     pull: yes
     env:
+      MONGO_URL: mongodb://mongo/plan
       #MONGO_URL: mongodb://wekandb/plan
-      #MONGO_URL: mongodb://127.0.0.1:27017/wekan
-      MONGO_URL: mongodb://127.0.0.1:27017/plan
+      # MONGO_URL: mongodb://wekandb:27017/wekan
+      # MONGO_URL: mongodb://127.0.0.1:27017/plan
       ROOT_URL: https://wekan.{{ user.domain }}
       #MAIL_URL: 'smtp://<mail_url>:25/?ignoreTLS=true&tls={rejectUnauthorized:false}'
       #MAIL_FROM: 'Wekan Notifications <noreply.wekan@mydomain.com>'
