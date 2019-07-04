@@ -55,8 +55,8 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       HTTPS_METHOD: noredirect
 
-    depends_on:
-      - wekandb
+    # depends_on:
+    #   - wekandb
 
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
