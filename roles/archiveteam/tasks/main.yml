@@ -1,0 +1,56 @@
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: archiveteam
+  when: cloudflare_enabled
+
+- name: "Create archiveteam directories"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - "/opt/archiveteam"
+
+- name: "Stop and remove any existing container"
+  docker_container:
+    name: archiveteam
+    state: absent
+
+- name: "Pull archiveteam Docker image"
+  docker_image:
+    name: "archiveteam/warrior-dockerfile"
+
+- name: Create and start archiveteam container
+  docker_container:
+    name: archiveteam
+    image: "archiveteam/warrior-dockerfile"
+    published_ports:
+      - "8001:8001"
+
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "archiveteam.{{ user.domain }}"
+      VIRTUAL_PORT: 8001
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: "archiveteam.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      # DOWNLOADER: ""
+      HTTP_PASSWORD: "{{ user.pass }}"
+      # HTTP_USERNAME: "{{ user.name }}"
+      # SELECTED_PROJECT: ""
+      # SHARED_RSYNC_THREADS: ""
+      # WARRIOR_ID: ""
+      # CONCURRENT_ITEMS: ""
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/archiveteam:/home/warrior"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - archiveteam
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
