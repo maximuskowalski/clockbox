@@ -32,7 +32,7 @@
       PGID: "{{ gid }}"
       VIRTUAL_HOST: "archiveteam.{{ user.domain }}"
       VIRTUAL_PORT: 8001
-      VIRTUAL_PROTO: https
+      VIRTUAL_PROTO: http
       LETSENCRYPT_HOST: "archiveteam.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       # DOWNLOADER: ""
