@@ -11,26 +11,27 @@
 ---
 - name: Stop and remove any existing containers
   docker_container:
-    name: wekandb
+    name: mongo
     state: absent
 
 - name: mongo wekanDB Role
   docker_container:
-    name: wekandb
+    name: mongo
     image: "mongo"
     pull: yes
-    command: mongod --smallfiles --oplogSize 128
+    command: --smallfiles
     networks:
       - name: cloudbox
         aliases:
-          - wekandb
-    published_ports:
-      - "127.0.0.1:27017:27017"
+          - mongo
+    # published_ports:
+    #   - "127.0.0.1:27017:27017"
 
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/wekan/wekandb:/data/db"
       - "/opt/wekan/wekandbdump:/dump"
+      - "/opt/wekan/backups:/backups"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
 

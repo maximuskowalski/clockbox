@@ -22,6 +22,8 @@
     - /opt/wekan
     - /opt/wekan/wekandb
     - /opt/wekan/wekandbdump
+    - /opt/wekan/backups
+    - /opt/wekan/app
 
 - name: mongo wekanDB Role
   import_tasks: subtasks/wekandb.yml
@@ -39,10 +41,13 @@
 - name: Create and start wekan container
   docker_container:
     name: wekan
-    image: "quay.io/wekan/wekan:master"
+    image: "mquandalle/wekan"
     pull: yes
     env:
-      MONGO_URL: mongodb://127.0.0.1:27017/wekan
+      MONGO_URL: mongodb://mongo/plan
+      #MONGO_URL: mongodb://wekandb/plan
+      # MONGO_URL: mongodb://wekandb:27017/wekan
+      # MONGO_URL: mongodb://127.0.0.1:27017/plan
       ROOT_URL: https://wekan.{{ user.domain }}
       #MAIL_URL: 'smtp://<mail_url>:25/?ignoreTLS=true&tls={rejectUnauthorized:false}'
       #MAIL_FROM: 'Wekan Notifications <noreply.wekan@mydomain.com>'
@@ -62,6 +67,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/wekan/wekandb:/data/db"
       - "/opt/wekan/wekandbdump:/dump"
+      - "/opt/wekan/backups:/backups"
+      - "/opt/wekan/app:/built_app/programs/web.browser/app"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
