@@ -22,6 +22,7 @@
     command: mongod --smallfiles --oplogSize 128
     networks:
       - name: cloudbox
+      - name: bridge
         aliases:
           - wekandb
     published_ports:
