@@ -65,6 +65,8 @@
       - "/opt/wekan/wekandbdump:/dump"
     ports:
       - 3001:8080
+      - 80:80
+      -443:443
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
