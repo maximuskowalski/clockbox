@@ -54,6 +54,7 @@
       VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "kanboard.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      PLUGIN_INSTALLER: "true"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/kanboard/data:/var/www/app/data"
