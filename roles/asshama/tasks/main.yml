@@ -55,7 +55,7 @@
 - name: Clone Hama Bundle
   git:
     repo: https://github.com/ZeroQI/Hama.bundle.git
-    dest: '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins'
+    dest: '/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Hama.bundle'
     clone: yes
     version: HEAD
     force: yes
