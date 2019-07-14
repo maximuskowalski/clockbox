@@ -37,14 +37,17 @@
     - '/opt/plex/Library/Application Support/Plex Media Server/Plug-in Support/Data/com.plexapp.agents.hama/DataItems/FanartTV'
 
 - name: Get latest Absolute Series Scanner.py
-  command: wget -O '/opt/plex/Library/Application Support/Plex Media Server/Scanners/Series/Absolute Series Scanner.py' https://raw.githubusercontent.com/ZeroQI/Absolute-Series-Scanner/master/Scanners/Series/Absolute%20Series%20Scanner.py"
+  get_url:
+    url: https://raw.githubusercontent.com/ZeroQI/Absolute-Series-Scanner/master/Scanners/Series/Absolute%20Series%20Scanner.py
+    dest: '/opt/plex/Library/Application Support/Plex Media Server/Scanners/Series/Absolute Series Scanner.py'
+    mode: '0775'
 
-- name: Set Absolute Series Scanner.py as executable
-  file:
-    path: '/opt/plex/Library/Application Support/Plex Media Server/Scanners'
-    owner: "{{ user.name }}"
-    group: "{{ user.name }}"
-    mode: a+x
+# - name: Set Absolute Series Scanner.py as executable
+#   file:
+#     path: '/opt/plex/Library/Application Support/Plex Media Server/Scanners'
+#     owner: "{{ user.name }}"
+#     group: "{{ user.name }}"
+#     mode: a+x
 
 - name: Set directory permissions
   file: "path='/opt/plex/Library/Application Support/Plex Media Server/Scanners' state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
