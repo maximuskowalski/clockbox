@@ -1,0 +1,56 @@
+########################################################################
+# Title:         Cloudbox: Docuwiki        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: "{{ docuwiki.subdomain|default('wiki',true) }}"
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing containers
+  docker_container: "name={{ item }} state=absent"
+  with_items:
+    - docuwiki
+
+- name: "Create docuwiki directories"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - "/opt/docuwiki"
+
+- name: Create and start docuwiki container
+  docker_container:
+    name: docuwiki
+    image: "ericbarch/dockuwiki:latest"
+    # published_ports:
+    #   - 3000:3000
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      SSH_DOMAIN: "{{ docuwiki.ssh_domain|default('bitbucket.org',true) }}"
+      SSH_PORT: "{{ docuwiki.ssh_port|default('22',true) }}"
+      REMOTE_URL: "{{ docuwiki.remote_url|default('git@bitbucket.org:YOUR_BITBUCKET_USERNAME/wiki.git',true) }}"
+      VIRTUAL_HOST: "{{ docuwiki.subdomain|default('wiki',true) }}.{{ user.domain }}"
+      VIRTUAL_PORT: 443
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: "{{ docuwiki.subdomain|default('wiki',true) }}.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/docuwiki:/config"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - docuwiki
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started

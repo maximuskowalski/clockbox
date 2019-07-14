@@ -14,3 +14,4 @@
     - { role: archiveteam, tags: ['archiveteam'] }
     - { role: asshama, tags: ['asshama'] }
     - { role: epms, tags: ['epms'] }
+    - { role: docuwiki, tags: ['docuwiki'] }

@@ -25,3 +25,8 @@ alltube:
 synclounge:
   domain:
   subdomain: synclounge
+docuwiki:
+  subdomain: wiki
+  ssh_domain: bitbucket.org
+  remote_url: git@bitbucket.org:YOUR_BITBUCKET_USERNAME/wiki.git
+  ssh_port: 22
