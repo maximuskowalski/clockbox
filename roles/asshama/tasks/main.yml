@@ -49,8 +49,8 @@
 #     group: "{{ user.name }}"
 #     mode: a+x
 
-- name: Set directory permissions
-  file: "path='/opt/plex/Library/Application Support/Plex Media Server/Scanners' state=directory owner={{ user.name }} group={{ user.name }} recurse=yes"
+- name: Set ASS directory permissions
+  file: "path='/opt/plex/Library/Application Support/Plex Media Server/Scanners' state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: Clone Hama Bundle
   git:
@@ -61,6 +61,9 @@
     force: yes
   become: yes
   become_user: "{{ user.name }}"
+
+- name: Set HAMA directory permissions
+  file: "path='/opt/plex/Library/Application Support/Plex Media Server/Plug-ins/Hama.bundle' state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
 
 - name: Start Plex container
   docker_container:
