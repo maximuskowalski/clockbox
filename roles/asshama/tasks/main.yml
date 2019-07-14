@@ -13,7 +13,7 @@
   docker_container:
     name: plex
     state: stopped
-  when: ('trakttv-plugin' in ansible_run_tags)
+  when: ('asshama' in ansible_run_tags)
 
 - name: Create ASS and HAMA directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
@@ -41,14 +41,7 @@
     url: https://raw.githubusercontent.com/ZeroQI/Absolute-Series-Scanner/master/Scanners/Series/Absolute%20Series%20Scanner.py
     dest: '/opt/plex/Library/Application Support/Plex Media Server/Scanners/Series/Absolute Series Scanner.py'
     mode: '0775'
-
-# - name: Set Absolute Series Scanner.py as executable
-#   file:
-#     path: '/opt/plex/Library/Application Support/Plex Media Server/Scanners'
-#     owner: "{{ user.name }}"
-#     group: "{{ user.name }}"
-#     mode: a+x
-
+    
 - name: Set ASS directory permissions
   file: "path='/opt/plex/Library/Application Support/Plex Media Server/Scanners' state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
 
