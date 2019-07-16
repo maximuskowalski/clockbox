@@ -33,7 +33,7 @@
     dest: /opt/delugevpn/piaconfigs
     remote_src: yes
 - name: Copy Cert and config
-  copy: src={{ /opt/delugevpn/piaconfigs }} dest={{ /opt/delugevpn/openvpn }}
+  copy: src="{{ /opt/delugevpn/piaconfigs }}" dest="{{ /opt/delugevpn/openvpn }}"
   with_items:
     - "{ src: '*.crt', dest: '*.crt' }"
     - "{ src: '*.pem', dest: '*.pem' }"
