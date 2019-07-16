@@ -15,3 +15,4 @@
     - { role: asshama, tags: ['asshama'] }
     - { role: epms, tags: ['epms'] }
     - { role: docuwiki, tags: ['docuwiki'] }
+    - { role: delugevpn, tags: ['delugevpn'] }

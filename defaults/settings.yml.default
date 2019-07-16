@@ -30,3 +30,7 @@ docuwiki:
   ssh_domain: bitbucket.org
   remote_url: git@bitbucket.org:YOUR_BITBUCKET_USERNAME/wiki.git
   ssh_port: 22
+delugevpn:
+  vpn_user: your_vpn_username
+  vpn_pass: your_vpn_password
+  vpn_prov: pia

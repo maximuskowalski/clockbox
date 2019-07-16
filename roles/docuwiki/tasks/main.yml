@@ -29,8 +29,8 @@
   docker_container:
     name: docuwiki
     image: "ericbarch/dockuwiki:latest"
-    published_ports:
-      - "3000:3000"
+    # published_ports:
+    #   - "3000:3000"
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
@@ -38,7 +38,7 @@
       SSH_PORT: "{{ docuwiki.ssh_port|default('22',true) }}"
       REMOTE_URL: "{{ docuwiki.remote_url|default('git@bitbucket.org:YOUR_BITBUCKET_USERNAME/wiki.git',true) }}"
       VIRTUAL_HOST: "{{ docuwiki.subdomain|default('wiki',true) }}.{{ user.domain }}"
-      VIRTUAL_PORT: 443
+      VIRTUAL_PORT: 3000
       VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "{{ docuwiki.subdomain|default('wiki',true) }}.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
