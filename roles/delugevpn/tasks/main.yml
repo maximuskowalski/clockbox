@@ -32,12 +32,20 @@
     src: https://www.privateinternetaccess.com/openvpn/openvpn.zip
     dest: /opt/delugevpn/piaconfigs
     remote_src: yes
+
 - name: Copy Cert and config
-  copy: src="{{ /opt/delugevpn/piaconfigs }}" dest="{{ /opt/delugevpn/openvpn }}"
+  copy: "src=/opt/delugevpn/piaconfigs/{{ item }} dest=/opt/delugevpn/openvpn"
   with_items:
-    - "{ src: '*.crt', dest: '*.crt' }"
-    - "{ src: '*.pem', dest: '*.pem' }"
-    - "{ src: '{{ delugevpn.vpn_endpoint|default('Netherlands.ovpn',true) }}', dest: '*'"
+    - "*.crt"
+    - "*.pem"
+    - "{{ delugevpn.vpn_endpoint|default('Netherlands.ovpn',true) }}"
+
+# - name: Copy Cert and config
+#   copy: src="{{ /opt/delugevpn/piaconfigs }}" dest="{{ /opt/delugevpn/openvpn }}"
+#   with_items:
+#     - "{ src: '*.crt', dest: '*.crt' }"
+#     - "{ src: '*.pem', dest: '*.pem' }"
+#     - "{ src: '{{ delugevpn.vpn_endpoint|default('Netherlands.ovpn',true) }}', dest: '*'"
 
 - name: Create new downloads directories
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }} recurse=yes"
