@@ -61,9 +61,9 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       UMASK_SET: 022
       VPN_ENABLED: "yes"
-      VPN_USER: "{{ docuwiki.vpn_user|default('username',true) }}"
-      VPN_PASS: "{{ docuwiki.vpn_pass|default('password',true) }}"
-      VPN_PROV: "{{ docuwiki.vpn_prov|default('pia',true) }}"
+      VPN_USER: "{{ delugevpn.vpn_user|default('username',true) }}"
+      VPN_PASS: "{{ delugevpn.vpn_pass|default('password',true) }}"
+      VPN_PROV: "{{ delugevpn.vpn_prov|default('pia',true) }}"
       STRICT_PORT_FORWARD: "yes"
       ENABLE_PRIVOXY: "no"
       LAN_NETWORK: "172.18.0.1/16"
