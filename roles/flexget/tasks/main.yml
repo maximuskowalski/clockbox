@@ -50,7 +50,7 @@
       FG_LOG_LEVEL: "info"
       TZ: "{{ system.timezone }}"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
+      # - "/etc/localtime:/etc/localtime:ro"
       - "/opt/flexget/config:/config"
       - "/opt/flexget/data:/data"
       - "/mnt:/mnt"
