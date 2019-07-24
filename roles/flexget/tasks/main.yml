@@ -38,20 +38,23 @@
     name: flexget
     image: "wiserain/flexget:latest"
     pull: yes
+    # ports:
+    #   - 3539:3539
     env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
       VIRTUAL_HOST: "flexget.{{ user.domain }}"
-      VIRTUAL_PORT: 3000
+      VIRTUAL_PORT: 3539
       LETSENCRYPT_HOST: "flexget.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      FG_WEBUI_PASSWD: mypass121212
+      FG_WEBUI_PASSWD: "{{ user.pass }}"
+      FG_LOG_LEVEL: "info"
+      TZ: "{{ system.timezone }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/flexget:/home/flexget"
-      - "/mnt/unionfs/Media:/data"
+      - "/opt/flexget/config:/config"
+      - "/opt/flexget/data:/data"
       - "/mnt:/mnt"
-      - "/mnt/unionfs/audiobooks/Calibre_Audio_Library:/audiobooks"
-      #- "/mnt/unionfs/audiobooks/Calibre_Audio_Library:/collection1"
-      - "/mnt/unionfs/audiobooks/Audiobooks_English:/collection2"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
@@ -61,16 +64,3 @@
     purge_networks: yes
     restart_policy: unless-stopped
     state: started
-
-
-
-    --name=<container name> \
-    -p 3539:3539 \
-    -v <path for>:/data \
-    -v <path for>:/config \
-    -e FG_WEBUI_PASSWD=<desired> \
-    -e FG_LOG_LEVEL=info \
-    -e PUID=<uid for> \
-    -e PGID=<gid for> \
-    -e TZ=<timezone> \
-    wiserain/flexget
