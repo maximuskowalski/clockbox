@@ -46,7 +46,7 @@
       VIRTUAL_PORT: 3539
       LETSENCRYPT_HOST: "flexget.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
-      FG_WEBUI_PASSWD: "{{ user.pass }}"
+      FG_WEBUI_PASSWD: "passwordtest"
       FG_LOG_LEVEL: "info"
       TZ: "{{ system.timezone }}"
     volumes:
