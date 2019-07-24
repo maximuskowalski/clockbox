@@ -1,0 +1,15 @@
+docker run -d --restart=always --name=wiki \
+    -e SSH_DOMAIN=bitbucket.org \
+    -e REMOTE_URL=git@bitbucket.org:YOUR_BITBUCKET_USERNAME/wiki.git \
+    -e VIRTUAL_HOST=YOUR_DUCK_NAME.duckdns.org \
+    -e LETSENCRYPT_HOST=YOUR_DUCK_NAME.duckdns.org \
+    -e LETSENCRYPT_EMAIL=YOUR_EMAIL@YOUR_DOMAIN.com ericbarch/dockuwiki:rpi
+
+docker run -d
+--restart=always
+--name=wiki -
+e SSH_PORT=22
+-e SSH_DOMAIN=bitbucket.org
+-e REMOTE_URL=git@bitbucket.org:YOUR_BITBUCKET_USERNAME/wiki.git 
+-p 3000:3000
+ericbarch/dockuwiki

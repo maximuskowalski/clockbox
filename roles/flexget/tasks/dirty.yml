@@ -1,0 +1,11 @@
+docker run -d \
+    --name=<container name> \
+    -p 3539:3539 \
+    -v <path for>:/data \
+    -v <path for>:/config \
+    -e FG_WEBUI_PASSWD=<desired> \
+    -e FG_LOG_LEVEL=info \
+    -e PUID=<uid for> \
+    -e PGID=<gid for> \
+    -e TZ=<timezone> \
+    wiserain/flexget

@@ -1,0 +1,76 @@
+
+#########################################################################
+# Title:         Cloudbox: Flexget                                      #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: flexget
+  when: cloudflare_enabled
+
+- name: Create required directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - /opt/flexget
+    - /opt/flexget/data
+    - /opt/flexget/config
+
+- name: "Stop and remove any existing container"
+  docker_container:
+    name: flexget
+    state: absent
+
+- name: "Pull flexget Docker image"
+  docker_image:
+    name: "wiserain/flexget:latest"
+
+- name: "Create and start container"
+  docker_container:
+    name: flexget
+    image: "wiserain/flexget:latest"
+    pull: yes
+    env:
+      VIRTUAL_HOST: "flexget.{{ user.domain }}"
+      VIRTUAL_PORT: 3000
+      LETSENCRYPT_HOST: "flexget.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      FG_WEBUI_PASSWD: mypass121212
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/flexget:/home/flexget"
+      - "/mnt/unionfs/Media:/data"
+      - "/mnt:/mnt"
+      - "/mnt/unionfs/audiobooks/Calibre_Audio_Library:/audiobooks"
+      #- "/mnt/unionfs/audiobooks/Calibre_Audio_Library:/collection1"
+      - "/mnt/unionfs/audiobooks/Audiobooks_English:/collection2"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - flexget
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
+
+
+
+    --name=<container name> \
+    -p 3539:3539 \
+    -v <path for>:/data \
+    -v <path for>:/config \
+    -e FG_WEBUI_PASSWD=<desired> \
+    -e FG_LOG_LEVEL=info \
+    -e PUID=<uid for> \
+    -e PGID=<gid for> \
+    -e TZ=<timezone> \
+    wiserain/flexget
