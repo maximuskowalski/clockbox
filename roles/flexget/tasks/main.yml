@@ -9,7 +9,6 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
----
 - name: "Set DNS Record on CloudFlare"
   include_role:
     name: cloudflare
