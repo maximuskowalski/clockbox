@@ -21,6 +21,7 @@
   with_items:
     - /opt/shoko
     - /opt/shoko/config
+    - /mnt/local/downloads/anime
 
 - name: "Stop and remove any existing container"
   docker_container:
@@ -33,7 +34,7 @@
       - "/opt/shoko/config:/home/shoko/.shoko"
       - "/mnt:/mnt"
       - "/mnt/unionfs/Media/anime:/anime" # make this a variable
-      - "/mnt/local/downloads:/import"
+      - "/mnt/local/downloads/anime:/import"
 
 - name: "Create and start container"
   docker_container:

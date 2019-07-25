@@ -17,3 +17,4 @@
     - { role: docuwiki, tags: ['docuwiki'] }
     - { role: delugevpn, tags: ['delugevpn'] }
     - { role: flexget, tags: ['flexget'] }
+    - { role: shokoserver, tags: ['shokoserver'] }
