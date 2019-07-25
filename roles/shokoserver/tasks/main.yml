@@ -1,0 +1,60 @@
+
+#########################################################################
+# Title:         Cloudbox: ShokoServer                                      #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: shoko
+  when: cloudflare_enabled
+
+- name: Create required directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - /opt/shoko
+    - /opt/shoko/config
+
+- name: "Stop and remove any existing container"
+  docker_container:
+    name: shoko
+    state: absent
+
+- name: Set 'default_volumes' variable
+  set_fact:
+    default_volumes:
+      - "/opt/shoko/config:/home/shoko/.shoko"
+      - "/mnt:/mnt"
+      - "/mnt/unionfs/Media/anime:/anime" # make this a variable
+      - "/mnt/local/downloads:/import"
+
+- name: "Create and start container"
+  docker_container:
+    name: shoko
+    image: "cazzar/shokoserver:latest"
+    pull: yes
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "shoko.{{ user.domain }}"
+      VIRTUAL_PORT: 8111
+      LETSENCRYPT_HOST: "shoko.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      TZ: "{{ system.timezone }}"
+    volumes: "{{ default_volumes + nzbs_downloads_path|default([]) + torrents_downloads_path|default([]) }}"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - shoko
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
