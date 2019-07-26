@@ -2,6 +2,6 @@
   docker_container:
     name: redis
     image: "redis"
-    restart: always
-    ports:
-    - "6379:6379"
+    restart_policy: unless-stoppe
+    published_ports:
+      - "6379:6379"
