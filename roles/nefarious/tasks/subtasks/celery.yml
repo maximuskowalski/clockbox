@@ -11,6 +11,6 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/nefarious:/nefarious-db"
       - "/mnt:/mnt"
-    logging:
-      options:
-        max-size: 10m
+    # logging:
+    #   options:
+    #     max-size: 10m
