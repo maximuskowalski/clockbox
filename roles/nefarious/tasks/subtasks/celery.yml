@@ -1,0 +1,16 @@
+- name: "Create and start container"
+  docker_container:
+    name: celery
+    image: "lardbit/nefarious:latest"
+    pull: yes
+    entrypoint: /env/bin/celery -A nefarious worker --beat --loglevel=INFO
+    env:
+      DATABASE_URL: "sqlite:////nefarious-db/db.sqlite3"
+      REDIS_HOST: "redis"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nefarious:/nefarious-db"
+      - "/mnt:/mnt"
+    logging:
+      options:
+        max-size: 10m

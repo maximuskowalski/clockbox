@@ -1,0 +1,62 @@
+#########################################################################
+# Title:         Cloudbox: nefarious        #
+# Author(s):     desimaniac                                             #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: nefarious
+  when: cloudflare_enabled
+
+- name: "Create nefarious directories"
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - "/opt/nefarious"
+
+- name: "Stop and remove any existing container"
+  docker_container:
+    name: nefarious
+    state: absent
+
+- name: celery sub task
+  import_tasks: subtasks/celery.yml
+  when:
+    - (not continuous_integration)
+
+- name: redis sub task
+  import_tasks: subtasks/redis.yml
+  when:
+    - (not continuous_integration)
+
+- name: "Create and start container"
+  docker_container:
+    name: nefarious
+    image: "lardbit/nefarious:latest"
+    pull: yes
+    env:
+      DATABASE_URL: "sqlite:////nefarious-db/db.sqlite3"
+      REDIS_HOST: "redis"
+      VIRTUAL_HOST: "nefarious.{{ user.domain }}"
+      VIRTUAL_PORT: 443
+      LETSENCRYPT_HOST: "nefarious.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/nefarious:/nefarious-db"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - nefarious
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
