@@ -38,8 +38,8 @@
     name: channelsdvr
     image: fancybits/channels-dvr
     pull: yes
-    # published_ports:
-    #   - "127.0.0.1:8089:8089"
+    published_ports:
+      - "127.0.0.1:8089:8089"
     env:
       VIRTUAL_HOST: "channelsdvr.{{ user.domain }}"
       VIRTUAL_PORT: 8089
