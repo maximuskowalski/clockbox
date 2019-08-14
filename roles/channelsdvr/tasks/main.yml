@@ -30,6 +30,7 @@
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/channelsdvr
+    - /opt/channelsdvr/config
     - /mnt/local/dvr
 
 - name: Create and start container
@@ -47,7 +48,7 @@
     devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/channels/config:/channels-dvr"
+      - "/opt/channelsdvr/config:/channels-dvr"
       - "/mnt/local/dvr/recordings:/shares/DVR"
       - "/opt/scripts:/scripts"
       - "/mnt:/mnt"
