@@ -16,7 +16,7 @@
 # nano ~/clockbox/ansible.cfg
 # sudo ansible-playbook clockbox.yml --tags kanboard
 #
-# curl -s https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash >/dev/null 2>&1; cd ~/clockbox                                                                        #
+# curl -s https://raw.githubusercontent.com/maximuskowalski/clockbox/develop/mxcbrepo.sh | bash >/dev/null 2>&1; cd ~/clockbox #                                                                        #
 # curl -s https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash                       #
 # wget -qO- https://github.com/maximuskowalski/clockbox/mxcbrepo.sh | bash                     #
 #################################################################################
