@@ -19,3 +19,4 @@
     - { role: flexget, tags: ['flexget'] }
     - { role: shokoserver, tags: ['shokoserver'] }
     - { role: nefarious, tags: ['nefarious'] }
+    - { role: sschwifty, tags: ['sshwifty'] }
