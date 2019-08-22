@@ -1,0 +1,63 @@
+#########################################################################
+# Title:            Cloudbox: Channels DVR Role                              #
+# Author(s):        jonfinley                                           #
+# URL:              https://github.com/cloudbox/cloudbox                #
+# Docker Image(s):  https://hub.docker.com/r/fancybits/channels-dvr/    #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: channelsdvr
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: channelsdvr
+    state: absent
+
+- name: "Check if '/dev/dri' exists"
+  stat:
+    path: "/dev/dri"
+  register: dev_dri
+
+- name: Create directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - /opt/channelsdvr
+    - /opt/channelsdvr/config
+    - /mnt/local/dvr
+
+- name: Create and start container
+  docker_container:
+    name: channelsdvr
+    image: fancybits/channels-dvr
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8089:8089"
+    env:
+      VIRTUAL_HOST: "channelsdvr.{{ user.domain }}"
+      VIRTUAL_PORT: 8089
+      LETSENCRYPT_HOST: "channelsdvr.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+    devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/channelsdvr/config:/channels-dvr"
+      - "/mnt/local/dvr/recordings:/shares/DVR"
+      - "/opt/scripts:/scripts"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    user: "{{ uid }}:{{ gid }}"
+    networks:
+      - name: cloudbox
+        aliases:
+          - channelsdvr
+    restart_policy: always
+    state: started
