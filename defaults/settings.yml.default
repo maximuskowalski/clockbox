@@ -39,9 +39,9 @@ flexget:
   flex_pass: f1exgetp@sslongPassFlex
 sshwifty:
   sshwifty_hostname: "localhost"
-  sshwifty_sharedkey: {{ user.pass }}
+  sshwifty_sharedkey: "{{ user.pass }}"
   sshwifty_dialtimeout: 10
   sshwifty_socks5: "localhost:1080"
-  sshwifty_socks5_user: {{ user.name }}
-  sshwifty_socks5_password: {{ user.pass }}
+  sshwifty_socks5_user: "{{ user.name }}"
+  sshwifty_socks5_password: "{{ user.pass }}"
   sshwifty_listenport: 8182
