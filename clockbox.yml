@@ -19,6 +19,6 @@
     - { role: flexget, tags: ['flexget'] }
     - { role: shokoserver, tags: ['shokoserver'] }
     - { role: nefarious, tags: ['nefarious'] }
-    - { role: sschwifty, tags: ['sshwifty'] }
+    - { role: sshwifty, tags: ['sshwifty'] }
     - { role: channelsdvr, tags: ['channelsdvr'] }
     
