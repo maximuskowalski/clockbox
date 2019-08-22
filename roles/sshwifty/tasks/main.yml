@@ -43,7 +43,6 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/sshwifty:/sshwifty"
       - "/opt/sshwifty/config:/config"
       - "/mnt:/mnt"
     #ports:
