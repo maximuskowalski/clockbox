@@ -27,33 +27,33 @@
     name: sshwifty
     state: absent
 
-    - name: Create and start wekan container
-      docker_container:
-        name: sshwifty
-        image: "niruix/sshwifty:latest"
-        pull: yes
-        env:
-          PUID: "{{ uid }}"
-          PGID: "{{ gid }}"
-          SSHWIFTY_SHAREDKEY: "{{ sshwifty.sshwifty_hostname|default('{{ user.pass }}',true) }}"
-          VIRTUAL_HOST: "sshwifty.{{ user.domain }}"
-          VIRTUAL_PORT: 8182
-          VIRTUAL_PROTO: https
-          LETSENCRYPT_HOST: "sshwifty.{{ user.domain }}"
-          LETSENCRYPT_EMAIL: "{{ user.email }}"
-        volumes:
-          - "/etc/localtime:/etc/localtime:ro"
-          - "/opt/sshwifty:/sshwifty"
-          - "/opt/sshwifty/config:/config"
-          - "/mnt:/mnt"
-        #ports:
-          # - 8182:8182
-        labels:
-          "com.github.cloudbox.cloudbox_managed": "true"
-        networks:
-          - name: cloudbox
-            aliases:
-              - sshwifty
-        purge_networks: yes
-        restart_policy: unless-stopped
-        state: started
+- name: Create and start sshwifty container
+  docker_container:
+    name: sshwifty
+    image: "niruix/sshwifty:latest"
+    pull: yes
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      SSHWIFTY_SHAREDKEY: "{{ sshwifty.sshwifty_hostname|default('{{ user.pass }}',true) }}"
+      VIRTUAL_HOST: "sshwifty.{{ user.domain }}"
+      VIRTUAL_PORT: 8182
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: "sshwifty.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/sshwifty:/sshwifty"
+      - "/opt/sshwifty/config:/config"
+      - "/mnt:/mnt"
+    #ports:
+      # - 8182:8182
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - sshwifty
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
