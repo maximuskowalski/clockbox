@@ -35,7 +35,7 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      SSHWIFTY_SHAREDKEY: "{{ sshwifty.sshwifty_hostname|default('{{ user.pass }}',true) }}"
+      SSHWIFTY_SHAREDKEY: "{{ user.pass }}"
       VIRTUAL_HOST: "sshwifty.{{ user.domain }}"
       VIRTUAL_PORT: 8182
       VIRTUAL_PROTO: https
