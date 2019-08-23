@@ -42,10 +42,13 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       REMOTE_SSH_PORT: "22"
       REMOTE_SSH_USER: "{{ user.name }}"
+      REMOTE_SSH_SERVER: "0.0.0.0"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/wetty/config:/config"
       - "/mnt:/mnt"
+    ports:
+      - 3000:3000
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
