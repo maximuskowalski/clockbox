@@ -1,0 +1,57 @@
+
+#########################################################################
+# Title:         Cloudbox: wetty                                     #
+# Author(s):     not_desimaniac                                         #
+# URL:           https://github.com/cloudbox/cloudbox                   #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Set DNS Record on CloudFlare"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: wetty
+  when: cloudflare_enabled
+
+- name: Create required directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+    - /opt/wetty
+    - /opt/wetty/config
+
+- name: Stop and remove any existing containers
+  docker_container:
+    name: wetty
+    state: absent
+
+- name: Create and start wetty container
+  docker_container:
+    name: wetty
+    image: "svenihoney/wetty:latest"
+    pull: yes
+    env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      VIRTUAL_HOST: "wetty.{{ user.domain }}"
+      VIRTUAL_PORT: 3000
+      VIRTUAL_PROTO: https
+      LETSENCRYPT_HOST: "wetty.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      REMOTE_SSH_PORT: "22"
+      REMOTE_SSH_USER: "{{ user.name }}"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/opt/wetty/config:/config"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - wetty
+    purge_networks: yes
+    restart_policy: unless-stopped
+    state: started
