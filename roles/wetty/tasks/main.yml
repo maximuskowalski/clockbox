@@ -36,13 +36,13 @@
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
       VIRTUAL_HOST: "wetty.{{ user.domain }}"
-      VIRTUAL_PORT: 3000
+      VIRTUAL_PORT: 3001
       VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "wetty.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
       REMOTE_SSH_PORT: "22"
       REMOTE_SSH_USER: "{{ user.name }}"
-      REMOTE_SSH_SERVER: "0.0.0.0"
+      # REMOTE_SSH_SERVER: "0.0.0.0"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/wetty/config:/config"
