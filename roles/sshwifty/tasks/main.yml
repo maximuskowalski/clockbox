@@ -22,6 +22,15 @@
     - /opt/sshwifty
     - /opt/sshwifty/config
 
+- name: Import config file
+  copy:
+    src: "sshwifty.conf.json"
+    dest: "/opt/sshwifty/config/sshwifty.conf.json"
+    owner: "{{ user.name }}"
+    group: "{{ user.name }}"
+    mode: 0775
+    force: no
+
 - name: Stop and remove any existing containers
   docker_container:
     name: sshwifty
@@ -35,7 +44,8 @@
     env:
       PUID: "{{ uid }}"
       PGID: "{{ gid }}"
-      SSHWIFTY_SHAREDKEY: password
+      # SSHWIFTY_SHAREDKEY: password
+      SSHWIFTY_CONFIG: "/config/sshwifty.conf.json"
       VIRTUAL_HOST: "sshwifty.{{ user.domain }}"
       VIRTUAL_PORT: 8182
       VIRTUAL_PROTO: https
@@ -43,7 +53,7 @@
       LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      # - "/opt/sshwifty/config:/config"
+      - "/opt/sshwifty/config:/config"
       - "/mnt:/mnt"
     ports:
       - 8182:8182
