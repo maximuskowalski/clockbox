@@ -48,7 +48,7 @@
       - "/opt/wetty/config:/config"
       - "/mnt:/mnt"
     ports:
-      - 3000:3000
+      - 3001:3000
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
