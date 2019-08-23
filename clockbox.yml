@@ -21,4 +21,4 @@
     - { role: nefarious, tags: ['nefarious'] }
     - { role: sshwifty, tags: ['sshwifty'] }
     - { role: channelsdvr, tags: ['channelsdvr'] }
-    
+    - { role: wetty, tags: ['wetty'] }
