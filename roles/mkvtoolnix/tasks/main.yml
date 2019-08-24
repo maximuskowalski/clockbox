@@ -48,6 +48,7 @@
       - "/mnt:/mnt"
     ports:
       - 5800:5800
+      - 5905:5900      
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
