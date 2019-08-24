@@ -22,3 +22,4 @@
     - { role: sshwifty, tags: ['sshwifty'] }
     - { role: channelsdvr, tags: ['channelsdvr'] }
     - { role: wetty, tags: ['wetty'] }
+    - { role: mkvtoolnix, tags: ['mkvtoolnix'] }
