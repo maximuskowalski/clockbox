@@ -46,8 +46,8 @@
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/mkvtoolnix/config:/config"
       - "/mnt:/mnt"
-    # ports:
-    #   - 5800:5800
+    ports:
+      - 5800:5800
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
