@@ -25,22 +25,26 @@
   with_items:
     - /opt/embystats
     - /opt/embystats/config    
-    - /opt/embystats/logs
-    - /opt/embystats/database
-    - /opt/embystats/settings
+    # - /opt/embystats/logs
+    # - /opt/embystats/database
+    # - /opt/embystats/settings
 
 - name: Create and start container
   docker_container:
     name: embystats
     image: "uping/embystat:nightly-ubuntu-x64"
     pull: yes
-    published_ports:
-      - "127.0.0.1:9049:80"
+    # published_ports:
+    #   - "127.0.0.1:9049:80"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/embystats/config:/app/config"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
+      PUID: "{{ uid }}"
+      PGID: "{{ gid }}"
+      UID: "{{ uid }}"
+      GID: "{{ gid }}"
       VIRTUAL_HOST: "embystats.{{ user.domain }}"
       VIRTUAL_PORT: 6555
       LETSENCRYPT_HOST: "embystats.{{ user.domain }}"
