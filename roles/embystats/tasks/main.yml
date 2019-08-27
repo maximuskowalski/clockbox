@@ -32,7 +32,7 @@
 - name: Create and start container
   docker_container:
     name: embystats
-    image: "uping/embystat:beta-ubuntu-x64"
+    image: "uping/embystat:nightly-ubuntu-x64"
     pull: yes
     published_ports:
       - "127.0.0.1:9049:80"
