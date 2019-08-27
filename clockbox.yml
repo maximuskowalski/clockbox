@@ -23,3 +23,4 @@
     - { role: channelsdvr, tags: ['channelsdvr'] }
     - { role: wetty, tags: ['wetty'] }
     - { role: mkvtoolnix, tags: ['mkvtoolnix'] }
+    - { role: embystats, tags: ['embystats'] }
