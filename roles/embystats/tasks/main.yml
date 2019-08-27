@@ -24,15 +24,21 @@
   file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
   with_items:
     - /opt/embystats
+    - /opt/embystats/config    
+    - /opt/embystats/logs
+    - /opt/embystats/database
+    - /opt/embystats/settings
 
 - name: Create and start container
   docker_container:
     name: embystats
     image: "uping/embystat:beta-ubuntu-x64"
     pull: yes
+    published_ports:
+      - "127.0.0.1:9049:80"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/embystats:/app/config"
+      - "/opt/embystats/config:/app/config"
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
       VIRTUAL_HOST: "embystats.{{ user.domain }}"
