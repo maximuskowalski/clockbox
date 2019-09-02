@@ -1,13 +1,13 @@
 {
   "HostName": "",
-  "SharedKey": "Fuyutsuki-chan!_I_beg_you!",
+  "SharedKey": "{{user.pass}}",
   "DialTimeout": 5,
   "Socks5": "",
   "Socks5User": "",
   "Socks5Password": "",
   "Servers": [
     {
-      "ListenInterface": "127.0.0.1",
+      "ListenInterface": "0.0.0.0",
       "ListenPort": 8182,
       "InitialTimeout": 3,
       "ReadTimeout": 60,

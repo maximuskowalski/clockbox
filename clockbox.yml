@@ -24,3 +24,4 @@
     - { role: wetty, tags: ['wetty'] }
     - { role: mkvtoolnix, tags: ['mkvtoolnix'] }
     - { role: embystats, tags: ['embystats'] }
+    - { role: calibreweb, tags: ['calibreweb'] }

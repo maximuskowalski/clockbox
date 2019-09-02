@@ -1,0 +1,59 @@
+#########################################################################
+# Title:            Community: Calibre-Web Role                         #
+# Author(s):        -SK, herp (Superduper09), desimaniac                #
+# URL:              https://github.com/cloudbox/community               #
+# Docker Image(s):  linuxserver/calibre-web                             #
+# --                                                                    #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+- name: "Setting CloudFlare DNS Record"
+  include_role:
+    name: cloudflare
+  vars:
+    subdomain: books
+  when: cloudflare_enabled
+
+- name: Stop and remove any existing container
+  docker_container:
+    name: calibreweb
+    state: absent
+
+- name: Create calibre directories
+  file: "path={{ item }} state=directory mode=0775 owner={{ user.name }} group={{ user.name }}"
+  with_items:
+   - /opt/calibreweb
+
+- name: Create and start container
+  docker_container:
+    name: calibreweb
+    image: linuxserver/calibre-web
+    pull: yes
+    published_ports:
+      - "127.0.0.1:8083:8083"
+    env:
+      PUID: "{{ uid }}"
+      GUID: "{{ gid }}"
+      VIRTUAL_HOST: "books.{{ user.domain }}"
+      VIRTUAL_PORT: 8083
+      LETSENCRYPT_HOST: "books.{{ user.domain }}"
+      LETSENCRYPT_EMAIL: "{{ user.email }}"
+      USE_CONFIG_DIR: true
+      DOCKER_MODS: linuxserver/calibre-web:calibre
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/mnt/unionfs/Media/Books:/books"
+      - "/opt/calibreweb/config:/config"
+      - "/opt/calibreweb:/calibre-web"
+      - "/mnt:/mnt"
+    labels:
+      "com.github.cloudbox.cloudbox_managed": "true"
+    networks:
+      - name: cloudbox
+        aliases:
+          - calibreweb
+    purge_networks: yes
+    restart_policy: always
+    state: started
