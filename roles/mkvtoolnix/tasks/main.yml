@@ -27,7 +27,7 @@
     name: mkvtoolnix
     state: absent
 
-- name: Create and start mkvtoolnix container
+- name: Create and start container
   docker_container:
     name: mkvtoolnix
     image: "jlesage/mkvtoolnix:latest"
@@ -36,17 +36,20 @@
       USER_ID: "{{ uid }}"
       GROUP_ID: "{{ gid }}"
       VNC_PASSWORD: "{{ user.pass }}"
+      DISPLAY_WIDTH: 1280
+      DISPLAY_HEIGHT: 768
       ENABLE_CJK_FONT: "1"
       VIRTUAL_HOST: "mkvtoolnix.{{ user.domain }}"
       VIRTUAL_PORT: 5800
-      VIRTUAL_PROTO: https
+      #VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "mkvtoolnix.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "/opt/mkvtoolnix/config:/config"
-      - "/mnt:/mnt"
-      - "/mnt:/storage"      
+      - "/opt/mkvtoolnix/config:/config:rw"
+      - "/mnt:/mnt:rw"
+      - "/mnt:/storage:rw"
+      - "/var/run/docker.sock:/var/run/docker.sock"      
     # published_ports:
     #   - "127.0.0.1:5801:5800"
     #   - "127.0.0.1:5906:5900"
