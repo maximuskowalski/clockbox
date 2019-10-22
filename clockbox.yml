@@ -6,6 +6,7 @@
     - ['~/cloudbox/settings.yml', '~/cloudbox/defaults/settings.yml.default']
     - ['~/cloudbox/adv_settings.yml', '~/cloudbox/defaults/adv_settings.yml.default']
   roles:
+    - { role: settings, tags: ['always', 'settings'] }
     - { role: pre_tasks, tags: ['pre_tasks']}
     - { role: kanboard, tags: ['kanboard'] }
     - { role: audioserve, tags: ['audioserve'] }

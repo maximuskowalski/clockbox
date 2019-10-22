@@ -39,9 +39,9 @@
       DISPLAY_WIDTH: 1280
       DISPLAY_HEIGHT: 768
       VNC_PASSWORD: "{{ user.pass }}"
+      ENABLE_CJK_FONT: "1"
       USER_ID: "{{ uid }}"
       GROUP_ID: "{{ gid }}"
-      CLEAN_TMP_DIR: 1
       UMASK: 000
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
