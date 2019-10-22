@@ -32,17 +32,16 @@
     image: "jlesage/mkvtoolnix:latest"
     pull: yes
     env:
-      USER_ID: "{{ uid }}"
-      GROUP_ID: "{{ gid }}"
-      VNC_PASSWORD: "{{ user.pass }}"
-      DISPLAY_WIDTH: 1280
-      DISPLAY_HEIGHT: 768
-      ENABLE_CJK_FONT: "1"
       VIRTUAL_HOST: "mkvtoolnix.{{ user.domain }}"
       VIRTUAL_PORT: 5800
-      #VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "mkvtoolnix.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      DISPLAY_WIDTH: 1280
+      DISPLAY_HEIGHT: 768
+      VNC_PASSWORD: "{{ user.pass }}"
+      USER_ID: "{{ uid }}"
+      GROUP_ID: "{{ gid }}"
+      CLEAN_TMP_DIR: 1
       UMASK: 000
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
