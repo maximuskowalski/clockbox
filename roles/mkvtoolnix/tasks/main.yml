@@ -1,4 +1,3 @@
-
 #########################################################################
 # Title:         Cloudbox: mkvtoolnix                                    #
 # Author(s):     not_desimaniac                                         #
@@ -44,15 +43,16 @@
       #VIRTUAL_PROTO: https
       LETSENCRYPT_HOST: "mkvtoolnix.{{ user.domain }}"
       LETSENCRYPT_EMAIL: "{{ user.email }}"
+      UMASK: 000
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/opt/mkvtoolnix/config:/config:rw"
       - "/mnt:/mnt:rw"
       - "/mnt:/storage:rw"
       - "/var/run/docker.sock:/var/run/docker.sock"      
-    # published_ports:
-    #   - "127.0.0.1:5801:5800"
-    #   - "127.0.0.1:5906:5900"
+    published_ports:
+      - "127.0.0.1:5801:5800"
+      - "127.0.0.1:5901:5900"
     labels:
       "com.github.cloudbox.cloudbox_managed": "true"
     networks:
